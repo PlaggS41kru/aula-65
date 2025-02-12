@@ -1,118 +1,50 @@
-# Aula 3: Trabalhando com Módulos e Organizando o Código
+# React + TypeScript + Vite
 
-## 1. Introdução
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Nesta aula, abordamos a organização de código em projetos TypeScript e React, enfatizando a separação de responsabilidades e a modularização do código. Isso melhora a manutenibilidade e reutilização.
+Currently, two official plugins are available:
 
-## 2. Importação e Exportação de Módulos no TypeScript
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-No TypeScript, podemos dividir o código em módulos para melhor organização. Exemplo:
+## Expanding the ESLint configuration
 
-**Exportando um módulo:**
-```ts
-export function saudacao(nome: string) {
-  return `Olá, ${nome}!`;
-}
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+
+- Configure the top-level `parserOptions` property like this:
+
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
 ```
 
-**Importando um módulo:**
-```ts
-import { saudacao } from "./utils";
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-console.log(saudacao("João"));
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
+
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
 ```
-
-## 3. Separação de Código em Arquivos Distintos
-
-Organizar o código em arquivos distintos ajuda a manter a estrutura do projeto limpa e fácil de entender.
-
-Exemplo de estrutura recomendada:
-```
-/src
-  /components
-    Button.tsx
-  /services
-    api.ts
-  /types
-    user.ts
-  App.tsx
-  index.tsx
-```
-
-## 4. Criando um Sistema de Tipos Reutilizáveis
-
-O TypeScript permite a criação de tipos reutilizáveis para facilitar o desenvolvimento.
-
-**Definição de tipo para usuários:**
-
-```ts
-export interface Usuario {
-  id: number;
-  nome: string;
-  email: string;
-}
-```
-
-**Uso do tipo em outro arquivo:**
-
-```ts
-import { Usuario } from "../types/user";
-
-const usuario: Usuario = {
-  id: 1,
-  nome: "Maria",
-  email: "maria@email.com"
-};
-```
-
-## 5. Configuração do Projeto React com TypeScript
-
-Para iniciar um projeto React com TypeScript:
-
-```sh
-npx create-react-app meu-projeto --template typescript
-```
-
-### Configuração de ESLint e Prettier
-
-Instalar dependências:
-
-```sh
-npm install eslint prettier eslint-config-prettier eslint-plugin-prettier --save-dev
-```
-
-Criar `.eslintrc.json`:
-
-```json
-{
-  "extends": ["react-app", "plugin:prettier/recommended"],
-  "rules": {
-    "prettier/prettier": ["error", { "endOfLine": "auto" }]
-  }
-}
-```
-
-Criar `.prettierrc`:
-
-```json
-{
-  "singleQuote": true,
-  "semi": true
-}
-```
-
-### Estruturando Pastas no Projeto
-
-```
-/src
-  /components    # Componentes reutilizáveis
-  /pages         # Páginas da aplicação
-  /services      # Requisições e lógica de negócio
-  /types         # Definições de tipos TypeScript
-  App.tsx        # Componente principal
-  index.tsx      # Ponto de entrada do React
-```
-
-## 6. Conclusão
-
-Com a separação correta do código, melhoramos a organização, reutilização e manutenção do projeto. Além disso, configurar ESLint e Prettier garante um código padronizado e limpo.
